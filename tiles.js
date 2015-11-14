@@ -8,7 +8,22 @@ var settings = {
     imgPrefix: "img/",
 };
 var mobile = navigator.userAgent.match(/Mobil/) !== null;
+var numTiles = 24;
 
+function MobileSizes() {
+    this.screenWidth = window.innerWidth;
+    this.screenHeight = window.innerHeight;
+
+    var unit = Math.floor(this.screenHeight / 6);
+
+    this.hspace = 0;
+    this.vspace = 0;
+    this.tileWidth = this.screenWidth;
+    this.tileHeight = unit;
+    this.tilesPerRow = 1;
+    this.hborder = 0;
+    this.vborder = 0;
+}
 
 function Sizes() {
     this.screenWidth = window.innerWidth;
@@ -20,14 +35,15 @@ function Sizes() {
 
     this.hspace = this.unit * 2;
     this.vspace = this.unit * 1;
-    this.tileSize = this.unit * 8;
-    var hb =  this.screenWidth - 6 * this.tileSize - 5 * this.hspace;
+    this.tileWidth = this.unit * 8;
+    this.tileHeight = this.unit * 8;
+    this.tilesPerRow = 6;
+    var tilesPerColumn = numTiles /  this.tilesPerRow;
+    var hb =  this.screenWidth - this.tilesPerRow * this.tileWidth - (this.tilesPerRow - 1) * this.hspace;
     this.hborder = Math.floor(hb / 2);
-    var vb =  this.screenHeight - 4 * this.tileSize - 3 * this.vspace;
+    var vb =  this.screenHeight - tilesPerColumn * this.tileHeight - (tilesPerColumn - 1) * this.vspace;
     this.vborder = Math.floor(vb / 2);
 }
-
-var sizes = new Sizes();
 
 function Elem(t, cn) {
     cn = typeof cn !== 'undefined' ?  cn : "";
@@ -316,7 +332,7 @@ AudioControl.prototype.set = function (percent) {
     this.bar.style.width = percent + '%';
 };
 
-function Tile(size, song, number) {
+function Tile(width, height, song, number) {
     this.fontScale = 0.6;
     this.main = Div("tile-box");
     this.main.style.perspective = "1000px";
@@ -329,15 +345,16 @@ function Tile(size, song, number) {
     this.number.innerHTML = number.toString();
     this.back = Div("tile-back");
     this.closed = true;
-    this.size(size);
+    this.size(width, height);
     if (song !== null) {
         this.setOnClick();
-        this.surprise = new Surprise(song, size);
+        this.surprise = new Surprise(song, height);
         this.back.appendChild(this.surprise.main);
         this.doorBackImage =Elem("img", "tile-artist-image");
         this.doorBackImage.src = settings.imgPrefix + song.artistPicture;
-        this.doorBackImage.width = Math.floor(size * 0.95);
-        this.doorBack.appendChild(this.doorBackImage);
+        this.doorBackImage.width = Math.floor(height * 0.95);
+        //this.doorBack.appendChild(this.doorBackImage);
+        this.back.appendChild(this.doorBackImage);
     }
     this.doorFront.appendChild(this.doorCanvas);
     this.doorFront.appendChild(this.number);
@@ -361,12 +378,12 @@ Tile.prototype.draw = function() {
                   0, 0, width, height);
 };
 
-Tile.prototype.size = function(x) {
+Tile.prototype.size = function(x, y=x) {
     this.main.style.width = x + 'px';
-    this.main.style.height = x + 'px';
+    this.main.style.height = y + 'px';
     this.doorCanvas.width = x;
-    this.doorCanvas.height = x;
-    this.number.style.fontSize = x * this.fontScale + 'px';
+    this.doorCanvas.height = y;
+    this.number.style.fontSize = y * this.fontScale + 'px';
     this.draw();
 };
 
@@ -391,7 +408,8 @@ Tile.prototype.close = function () {
         elem.style.transitionProperty = "transform";
         elem.style.transitionDuration = "2s";
         elem.style.transformOrigin = "left";
-        elem.style.transform = "rotate3d(0, 0, 0, 0deg)";
+        //elem.style.transform = "rotate3d(0, 0, 0, 0deg)";
+        elem.style.transform = "translate(0px)";
     }
     close(this.doorFront);
     close(this.doorBack);
@@ -403,7 +421,8 @@ Tile.prototype.open = function () {
         elem.style.transitionProperty = "transform";
         elem.style.transitionDuration = "2s";
         elem.style.transformOrigin = "left";
-        elem.style.transform = "rotate3d(0, -1, 0, 160deg)";
+        //elem.style.transform = "rotate3d(0, -1, 0, 160deg)";
+        elem.style.transform = "translate(" + sizes.tileWidth * 0.9 + "px)";
     }
     open(this.doorFront);
     open(this.doorBack);
@@ -451,27 +470,29 @@ function initDesktop() {
     document.body.appendChild(main);
     var top = sizes.vborder;
     var left = sizes.hborder;
-    var size = sizes.tileSize;
+    var tileWidth = sizes.tileWidth;
+    var tileHeight = sizes.tileHeight;
     var width = sizes.screenWidth;
     var vspace = sizes.vspace;
     var hspace = sizes.hspace;
+    var tilesPerRow = sizes.tilesPerRow;
     var x = left;
     var y = top;
     var perm = [];
-    for (var i = 0; i < 24; i++) {
+    for (var i = 0; i < numTiles; i++) {
         perm.push(i + 1);
     }
     shuffleArray(perm);
-    for (var i = 0; i < 24; i++) {
+    for (var i = 0; i < numTiles; i++) {
         var j = perm[i];
         var song = songs[j] !== undefined ? songs[j]: null;
-        var t = new Tile(size, song, j);
+        var t = new Tile(tileWidth, tileHeight, song, j);
         t.spawn(x, y, main);
         tiles.push(t);
-        x = x + size + hspace;
-        if ((i + 1) % 6 === 0) {
+        x = x + tileWidth + hspace;
+        if ((i + 1) % tilesPerRow === 0) {
             x = left;
-            y = y + size + vspace;
+            y = y + tileHeight + vspace;
         }
     }
 }
@@ -484,8 +505,13 @@ function ready(f) {
 }
 
 if (!(mobile)) {
+    var sizes = new Sizes();
     ready(initDesktop);
 } else {
+    var sizes = new MobileSizes();
+    ready(initDesktop);
+}
+/*
     function initMobile() {
         var main = Div("mobile-main");
         document.body.appendChild(main);
@@ -559,3 +585,4 @@ if (!(mobile)) {
 
     ready(initMobile);
 }
+*/
