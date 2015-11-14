@@ -157,7 +157,7 @@ function BImage(file) {
         me.oWidth = me.img.naturalWidth;
         me.oHeight = me.img.naturalHeight;
         for (var i in tiles) {
-            tiles[i].draw();
+            draw(tiles[i]);
         }
     };
     this.img.src = file;
