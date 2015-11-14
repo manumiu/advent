@@ -4,11 +4,7 @@ SVG.xlinkns = "http://www.w3.org/1999/xlink";
 
 function AudioPlayer () {
     this.main = Elem("audio");
-    this.type = "ogg";
-    if(this.main.canPlayType("audio/mpeg") == "maybe" ||
-       this.main.canPlayType("audio/mpeg") == "probably") {
-        this.type = "mp3";
-    }
+    this.type = "mp3";
     document.body.appendChild(this.main);
     this.pos = 0;
     this.audioControl = null;
@@ -61,11 +57,12 @@ var audioPlayer = new AudioPlayer();
 
 function PlayIcon(size) {
     var self = this;
+    var cssClass = mobile ? "suprise-play-icon-mobile" : "surprise-play-icon";
     this.main = document.createElementNS(SVG.ns, "svg");
     this.main.setAttribute("width", size);
     this.main.setAttribute("height", size);
     this.main.setAttribute("viewBox", "0 0 24 24");
-    this.main.setAttribute("class", "surprise-play-icon");
+    this.main.setAttribute("class", cssClass);
     this.main.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", SVG.xlinkns);
     this.path = document.createElementNS(SVG.ns, "path");
     this.playPath = "M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 "
@@ -84,61 +81,63 @@ PlayIcon.prototype.play = function () {
     this.path.setAttribute("d", this.pausePath);
 };
 
-function AudioControl(h, file) {
+function AudioControl(h, file, iconSize) {
     var self = this;
     this.file = file;
-    this.main = Div("audio-control-box");
-    this.playIcon = new PlayIcon(24);
-    this.outer = Div("progress-outer");
-    this.bar = Div("progress-inner");
-    this.knob = new Knob(h*4, "progress-knob", this);
+    this.main = Div(mobile ? "audio-control-box-mobile" : "audio-control-box");
+    this.playIcon = new PlayIcon(iconSize);
     this.main.appendChild(this.playIcon.main);
-    this.outer.appendChild(this.bar);
-    this.bar.appendChild(this.knob.main);
-    this.main.appendChild(this.outer);
-    this.outer.style.width = 'calc(100% - ' + 4 * h + 'px)';
-    this.outer.style.height = h + 'px'
-    this.bar.style.width = "0%";
-    this.bar.style.height = h + 'px'
-    this.outer.style.left = 2 * h + 'px';
-    this.outer.style.bottom = 2 * h + 'px';
-    this.mouseMoved = function (event) {
+    if (!mobile) {
+        this.outer = Div("progress-outer");
+        this.bar = Div("progress-inner");
+        this.knob = new Knob(h*4, "progress-knob", this);
+        this.outer.appendChild(this.bar);
+        this.bar.appendChild(this.knob.main);
+        this.main.appendChild(this.outer);
+        this.outer.style.width = 'calc(100% - ' + 4 * h + 'px)';
+        this.outer.style.height = h + 'px';
+        this.bar.style.width = "0%";
+        this.bar.style.height = h + 'px';
+        this.outer.style.left = 2 * h + 'px';
+        this.outer.style.bottom = 2 * h + 'px';
+        this.mouseMoved = function (event) {
         if (self.active) {
             event.preventDefault();
             var percent = self.handlePositionEvent(event);
             self.set(percent);
         }
-    };
-    this.seek = function(event) {
-        if (self.active) {
-            var percent = self.handlePositionEvent(event);
-            self.set(percent);
-            audioPlayer.seek(percent);
-        }
-    };
+        };
+        this.seek = function(event) {
+            if (self.active) {
+                var percent = self.handlePositionEvent(event);
+                self.set(percent);
+                audioPlayer.seek(percent);
+            }
+        };
+        this.handlePositionEvent = function (event) {
+            var boundingRect = self.outer.getBoundingClientRect();
+            var x = event.pageX - boundingRect.left;
+            var percent = 0;
+            if ( x < 0 ) {
+                percent = 0;
+            } else if (x < boundingRect.width) {
+                percent = Math.floor(100 * x / boundingRect.width);
+            } else {
+                percent = 100;
+            }
+            return percent;
+        };
+        this.bar.addEventListener("click", function(event) {
+            self.seek(event);
+        });
+        this.outer.addEventListener("click", function(event) {
+            self.seek(event);
+        });
+    }
     this.end = function() {
         self.playIcon.pause();
         this.playing = false;
     };
-    this.handlePositionEvent = function (event) {
-        var boundingRect = self.outer.getBoundingClientRect();
-        var x = event.pageX - boundingRect.left;
-        var percent = 0;
-        if ( x < 0 ) {
-            percent = 0;
-        } else if (x < boundingRect.width) {
-            percent = Math.floor(100 * x / boundingRect.width);
-        } else {
-            percent = 100;
-        }
-        return percent;
-    };
-    this.bar.addEventListener("click", function(event) {
-        self.seek(event);
-    });
-    this.outer.addEventListener("click", function(event) {
-        self.seek(event);
-    });
     this.playIcon.main.addEventListener("click", function () { self.togglePlayPause(); });
     this.playing = false;
     this.active = false;
