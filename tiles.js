@@ -4,7 +4,7 @@ SVG.xlinkns = "http://www.w3.org/1999/xlink";
 var bImage = null;
 var tiles = new Array();
 var settings = {
-    audioPrefix: "../music/",
+    audioPrefix: "music/",
     imgPrefix: "img/",
 };
 var mobile = navigator.userAgent.match(/Mobil/) !== null;
