@@ -8,6 +8,7 @@ body {
 
 .tile-box {
     position: absolute;
+    overflow-x: hidden;
 }
 
 .tile-door-number {
@@ -123,7 +124,7 @@ body {
 }
 
 .progress-knob:hover {
-    
+
 }
 
 .mobile-box {
