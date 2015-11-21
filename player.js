@@ -1,7 +1,4 @@
-var SVG = {};
-SVG.ns = "http://www.w3.org/2000/svg";
-SVG.xlinkns = "http://www.w3.org/1999/xlink";
-
+"use strict";
 function AudioPlayer () {
     this.main = Elem("audio");
     this.type = "mp3";
@@ -56,7 +53,7 @@ AudioPlayer.prototype.registerControl = function(audioControl, file) {
 var audioPlayer = new AudioPlayer();
 
 function PlayIcon(size) {
-    var self = this;
+    var SVG = { ns: "http://www.w3.org/2000/svg", xlinkns: "http://www.w3.org/1999/xlink" };
     var cssClass = mobile ? "suprise-play-icon-mobile" : "surprise-play-icon";
     this.main = document.createElementNS(SVG.ns, "svg");
     this.main.setAttribute("width", size);
@@ -65,10 +62,10 @@ function PlayIcon(size) {
     this.main.setAttribute("class", cssClass);
     this.main.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", SVG.xlinkns);
     this.path = document.createElementNS(SVG.ns, "path");
-    this.playPath = "M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 "
-        + "2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z";
-    this.pausePath = "M9 16h2V8H9v8zm3-14C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 "
-        + "2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-4h2V8h-2v8z"
+    this.playPath = "M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 " +
+        "2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z";
+    this.pausePath = "M9 16h2V8H9v8zm3-14C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 " +
+        "2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-4h2V8h-2v8z";
     this.path.setAttribute("d", this.playPath);
     this.main.appendChild(this.path);
 }

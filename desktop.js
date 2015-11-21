@@ -1,3 +1,4 @@
+"use strict";
 var libDesktop = (function() {
     function closeDoor(tile) {
         function close(elem) {

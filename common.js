@@ -1,3 +1,4 @@
+"use strict";
 function Elem(t, cn) {
     cn = typeof cn !== 'undefined' ?  cn : "";
     var e = document.createElement(t);

@@ -1,3 +1,4 @@
+"use strict";
 var libMobile = (function() {
     function closeDoor(tile) {
         function close(elem) {

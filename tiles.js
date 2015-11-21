@@ -1,3 +1,4 @@
+"use strict";
 var bImage = null;
 var tiles = new Array();
 var settings = {
@@ -119,11 +120,11 @@ function ready(f) {
 }
 
 if (!(mobile)) {
-    lib = libDesktop;
+    var lib = libDesktop;
     var sizes = new lib.Sizes();
     ready(init);
 } else {
-    lib = libMobile;
+    var lib = libMobile;
     var sizes = new lib.Sizes();
     ready(init);
 }
