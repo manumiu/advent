@@ -1,5 +1,10 @@
 "use strict";
 var libDesktop = (function() {
+    var enableFancyDiv = (function() {
+        var version = navigator.userAgent.match(/Firefox\/(\d\d)/);
+        return version !== null && parseInt(version.pop(), 10) >= 44;
+    })();
+
     function closeDoor(tile) {
         function close(elem) {
             elem.style.transitionProperty = "transform";
@@ -7,7 +12,12 @@ var libDesktop = (function() {
             elem.style.transformOrigin = "left";
             elem.style.transform = "rotate3d(0, 0, 0, 0deg)";
         }
-        close(tile.doorBox);
+        if (enableFancyDiv) {
+            close(tile.doorBox);
+        } else {
+            close(tile.doorFront);
+            close(tile.doorBack);
+        }
         tile.closed = true;
     }
 
@@ -18,7 +28,12 @@ var libDesktop = (function() {
             elem.style.transformOrigin = "left";
             elem.style.transform = "rotate3d(0, -1, 0, 160deg)";
         }
-        open(tile.doorBox);
+        if (enableFancyDiv) {
+            open(tile.doorBox);
+        } else {
+            open(tile.doorFront);
+            open(tile.doorBack);
+        }
         tile.closed = false;
     }
 
@@ -48,7 +63,9 @@ var libDesktop = (function() {
         this.main.style.perspective = "1000px";
         this.main.style.perspectiveOrigin = "50% 50%";
         this.main.style.transformStyle = "preserve-3d";
-        this.doorBox = Div("tile-door-box");
+        if (enableFancyDiv) {
+            this.doorBox = Div("tile-door-box");
+        }
         this.doorFront = Div("tile-door-front");
         this.doorCanvas = Elem("canvas", "tile-canvas");
         this.doorBack = Div("tile-door-back");
@@ -69,9 +86,14 @@ var libDesktop = (function() {
         this.doorFront.appendChild(this.doorCanvas);
         this.doorFront.appendChild(this.number);
         this.main.appendChild(this.back);
-        this.doorBox.appendChild(this.doorBack);
-        this.doorBox.appendChild(this.doorFront);
-        this.main.appendChild(this.doorBox);
+        if (enableFancyDiv) {
+            this.doorBox.appendChild(this.doorBack);
+            this.doorBox.appendChild(this.doorFront);
+            this.main.appendChild(this.doorBox);
+        } else {
+            this.main.appendChild(this.doorBack);
+            this.main.appendChild(this.doorFront);
+        }
     }
 
     function toggleDoor(tile) {
@@ -86,7 +108,12 @@ var libDesktop = (function() {
         tile.onClickFunction = function (event) {
             toggleDoor(tile);
         };
-        tile.doorBox.addEventListener("click", tile.onClickFunction);
+        if (enableFancyDiv) {
+            tile.doorBox.addEventListener("click", tile.onClickFunction);
+        } else {
+            tile.doorFront.addEventListener("click", tile.onClickFunction);
+            tile.doorBack.addEventListener("click", tile.onClickFunction);
+        }
     }
 
     function Surprise(song, size, iconSize) {
