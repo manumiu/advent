@@ -8,7 +8,17 @@ body {
 
 .tile-box {
     position: absolute;
-    overflow-x: hidden;
+}
+
+.tile-box-mobile {
+    position: absolute;
+    overflow: hidden;
+}
+
+.tile-door-box {
+    position: absolute;
+    height: 100%;
+    width: 100%;
 }
 
 .tile-door-number {
@@ -45,14 +55,19 @@ body {
     cursor: pointer;
 }
 
+.tile-artist-image-mobile {
+}
+
 .tile-artist-image {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%) rotateY(180deg);
 }
 
 .tile-back {
+    display: flex;
+    flex-flow: row;
     background-color: #F6F6F6;
     position: absolute;
     margin: auto;
@@ -76,6 +91,14 @@ body {
 
 .surprise-text {
     width: 95%;
+    height: 95%;
+    overflow: hidden;
+    color: rgba(43,43,43);
+    text-align: left;
+}
+
+.surprise-text {
+    width: 95%;
     height: 80%;
     overflow: hidden;
     color: rgba(43,43,43);
@@ -83,11 +106,16 @@ body {
 }
 
 .surprise-title {
-    padding: 3%;
+    padding: 0.5em;
 }
 
 .surprise-artist {
-    padding: 10% 3% 0% 3%;
+    padding: 0.5em;
+}
+
+.surprise-play-icon-mobile {
+   cursor: pointer;
+   position: absolute;
 }
 
 .surprise-play-icon {
@@ -125,6 +153,13 @@ body {
 
 .progress-knob:hover {
 
+}
+
+.audio-control-box-mobile {
+    position: absolute;
+    width: 10%;
+    bottom: 0%;
+    right: 10%;
 }
 
 .mobile-box {
