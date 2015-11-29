@@ -1,6 +1,6 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     color:rgba(43, 47, 66, 0.8);
     background-color:rgba(61,58,65,0.8);
     margin: 0px;
@@ -22,6 +22,7 @@ body {
 }
 
 .tile-door-number {
+    color: rgba(255, 255, 255, 0.9);
     user-select: none;
     position: absolute;
     top: 50%;
@@ -75,8 +76,8 @@ body {
     left: 0px;
     right: 0px;
     bottom: 0px;
-    height: 98%;
-    width: 98%;
+    height: 100%;
+    width: 100%;
 }
 
 .area {
@@ -106,20 +107,21 @@ body {
 }
 
 .surprise-title {
-    padding: 0.5em;
+    font-weight: bold;
+    padding: 0.5em 0.5em 0.2em 0.5em;
 }
 
 .surprise-artist {
-    padding: 0.5em;
+    padding: 0.2em 0.5em 0.5em 0.5em;
 }
 
 .surprise-play-icon-mobile {
-   cursor: pointer;
-   position: absolute;
+    cursor: pointer;
+    position: absolute;
 }
 
 .surprise-play-icon {
-   cursor: pointer;
+    cursor: pointer;
     position: absolute;
     bottom: 10%;
     right: 3%;
@@ -157,7 +159,6 @@ body {
 
 .audio-control-box-mobile {
     position: absolute;
-    width: 10%;
     bottom: 0%;
     right: 10%;
 }

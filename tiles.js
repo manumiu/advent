@@ -5,7 +5,8 @@ var settings = {
     audioPrefix: "music/",
     imgPrefix: "img/",
 };
-var mobile = navigator.userAgent.match(/Mobil/) !== null || location.hash.includes('mobile');
+var mobile = !location.hash.includes('desktop') &&
+    (navigator.userAgent.match(/Mobil/) !== null || location.hash.includes('mobile'));
 var numTiles = 24;
 var perm = (function () {
     var perm = [];
@@ -15,18 +16,6 @@ var perm = (function () {
     shuffleArray(perm);
     return perm;
 })();
-
-function SurpriseTextBox(artist, title, size) {
-    this.main = Div(mobile ? "surprise-text-mobile" : "surprise-text");
-    this.songTitle = Elem("div", "surprise-title");
-    this.songTitle.style.fontSize = Math.floor(size * 0.10) + 'px';
-    this.songTitle.innerHTML = title;
-    this.main.appendChild(this.songTitle);
-    this.artist = Elem("div", "surprise-artist");
-    this.artist.style.fontSize = Math.floor(size * 0.08) + 'px';
-    this.artist.innerHTML = artist;
-    this.main.appendChild(this.artist);
-}
 
 function draw(tile) {
     var ctx = tile.doorCanvas.getContext("2d");
