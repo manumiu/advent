@@ -27,6 +27,7 @@ var libMobile = (function() {
         this.screenHeight = window.innerHeight;
 
         var unit = Math.floor(this.screenHeight / 6);
+        this.screenHeight *= 6;
 
         this.hspace = 0;
         this.vspace = 0;

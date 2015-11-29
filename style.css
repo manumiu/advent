@@ -173,4 +173,8 @@ body {
 .image-cropper {
     width: 100%;
     overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
 }
