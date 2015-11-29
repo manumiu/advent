@@ -58,7 +58,7 @@ var libDesktop = (function() {
     }
 
     function Tile(width, height, song, number) {
-        this.fontScale = 0.6;
+        this.fontScale = 0.3;
         this.main = Div("tile-box");
         this.main.style.perspective = "1000px";
         this.main.style.perspectiveOrigin = "50% 50%";
@@ -80,7 +80,7 @@ var libDesktop = (function() {
             this.back.appendChild(this.surprise.main);
             this.doorBackImage =Elem("img", "tile-artist-image");
             this.doorBackImage.src = settings.imgPrefix + song.artistPicture;
-            this.doorBackImage.width = Math.floor(height * 0.95);
+            this.doorBackImage.width = Math.floor(height * 0.98);
             this.doorBack.appendChild(this.doorBackImage);
         }
         this.doorFront.appendChild(this.doorCanvas);
@@ -114,6 +114,18 @@ var libDesktop = (function() {
             tile.doorFront.addEventListener("click", tile.onClickFunction);
             tile.doorBack.addEventListener("click", tile.onClickFunction);
         }
+    }
+
+    function SurpriseTextBox(artist, title, size) {
+        this.main = Div(mobile ? "surprise-text-mobile" : "surprise-text");
+        this.songTitle = Elem("div", "surprise-title");
+        this.songTitle.style.fontSize = Math.floor(size * 0.11) + 'px';
+        this.songTitle.innerHTML = title;
+        this.main.appendChild(this.songTitle);
+        this.artist = Elem("div", "surprise-artist");
+        this.artist.style.fontSize = Math.floor(size * 0.10) + 'px';
+        this.artist.innerHTML = artist;
+        this.main.appendChild(this.artist);
     }
 
     function Surprise(song, size, iconSize) {
